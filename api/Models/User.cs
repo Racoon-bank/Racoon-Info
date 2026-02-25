@@ -9,5 +9,6 @@ namespace api.Models
     public class User : IdentityUser
     {
         public string? RefreshToken { get; set; }
+        public bool IsBanned { get; set; } = false;
     }
 }

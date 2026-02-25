@@ -14,6 +14,6 @@ namespace api.Dtos
         public string Email { get; set; } = string.Empty;
         [Required]
         [MinLength(1, ErrorMessage = "The Password field is required.")]
-        public string? Password { get; set; }
+        public string Password { get; set; } = string.Empty;
     }
 }

@@ -28,7 +28,7 @@ namespace api.Services
 
         public async Task<string> CreateAccessToken(string id, IList<string> roles)
         {
-            return await CreateToken(id, roles, DateTime.Now.AddMinutes(60), "AccessToken");
+            return await CreateToken(id, roles, DateTime.Now.AddMinutes(20), "AccessToken");
         }
 
         public async Task<string> CreateRefreshToken(string id, IList<string> roles)
@@ -52,7 +52,8 @@ namespace api.Services
             }
 
             var creds = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);
-            var tokenDescriptor = new SecurityTokenDescriptor {
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
                 Subject = new ClaimsIdentity(claims),
                 Expires = expirationDate,
                 SigningCredentials = creds,
@@ -76,7 +77,7 @@ namespace api.Services
             var user = _userManager.Users.FirstOrDefault(u => u.Id == data.Id);
             if (user == null || user.RefreshToken != token) return false;
 
-            return true; 
+            return true;
         }
 
         public bool ValidateAccessToken(string token)
@@ -92,7 +93,8 @@ namespace api.Services
             var tokenData = GetTokenData(token);
             if (tokenData != null)
             {
-                if (tokenData.TokenType == null || tokenData.TokenType != type) {
+                if (tokenData.TokenType == null || tokenData.TokenType != type)
+                {
                     return null;
                 }
                 return tokenData.Id;
@@ -109,25 +111,28 @@ namespace api.Services
                 ValidateLifetime = true,
                 ValidateIssuer = true,
                 ValidateAudience = true,
-                ValidIssuer = _config["Jwt:Issuer"],
-                ValidAudience = _config["Jwt:Audience"]
+                ValidIssuer = _config["JWT:Issuer"],
+                ValidAudience = _config["JWT:Audience"]
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();
-            try {
+            try
+            {
                 var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out _);
-                if (principal != null && principal.Identity.IsAuthenticated) {
-                return new TokenData {
-                    Id = principal.FindFirst(ClaimTypes.NameIdentifier)?.Value,
-                    TokenType = principal.FindFirst("TokenType")?.Value,
-                    Roles = principal.FindAll(ClaimTypes.Role).Select(role => role.Value).ToList()
-                };
-            }
+                if (principal != null && principal.Identity.IsAuthenticated)
+                {
+                    return new TokenData
+                    {
+                        Id = principal.FindFirst(ClaimTypes.NameIdentifier)?.Value,
+                        TokenType = principal.FindFirst("TokenType")?.Value,
+                        Roles = principal.FindAll(ClaimTypes.Role).Select(role => role.Value).ToList()
+                    };
+                }
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Token validation failed: {ex.Message}");
-                return null; 
+                return null;
             }
             return null;
         }

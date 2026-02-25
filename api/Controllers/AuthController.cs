@@ -21,44 +21,43 @@ namespace api.Controllers
             _authService = authService;
         }
 
+        /// <summary>
+        /// Login
+        /// </summary>
         [HttpPost("login")]
         [AllowAnonymous]
-        public async Task<IActionResult> Login([FromBody] LoginDto loginDto) 
+        public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-
             var result = await _authService.Login(loginDto);
-
-            if (result == null) {
-                return BadRequest(new ResponseModel {
-                    Status = "Error",
-                    Message = "Login failed"
-                });
-            }
-            
             return Ok(result);
         }
 
+        /// <summary>
+        /// Refresh a token
+        /// </summary>
         [HttpPost("refresh")]
         [AllowAnonymous]
-        public async Task<IActionResult> Refresh([FromBody] RefreshDto refreshDto) {
+        public async Task<IActionResult> Refresh([FromBody] RefreshDto refreshDto)
+        {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             var tokens = await _authService.RefreshToken(refreshDto);
-            if (tokens == null) {
+            if (tokens == null)
+            {
                 return Unauthorized();
             }
             return Ok(tokens);
         }
-        
+
+        /// <summary>
+        /// Logout
+        /// </summary>
         [HttpPost("logout")]
         [Authorize]
         public async Task<IActionResult> Logout()
         {
             if (!User.IsAccessToken()) return Unauthorized();
-            var message = await _authService.Logout(User.GetId());
-            if (message.Status == "Error") {
-                return Unauthorized();
-            }
+            await _authService.Logout(User.GetId());
             return Ok();
         }
     }

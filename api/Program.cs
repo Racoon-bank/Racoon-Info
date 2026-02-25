@@ -1,9 +1,12 @@
+using System.Reflection;
 using System.Text.Json.Serialization;
 using api.Data;
+using api.Exceptions;
 using api.Interfaces;
 using api.Models;
 using api.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -54,6 +57,8 @@ builder.Services.AddSwaggerGen(option =>
             new string[]{}
         }
     });
+    var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    option.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
 });
 
 builder.Services.AddDbContext<ApplicationDBContext>(options =>
@@ -98,6 +103,42 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserService, UserService>();
 
 var app = builder.Build();
+
+app.UseExceptionHandler(errorApp =>
+{
+    errorApp.Run(async context =>
+    {
+        var exception = context.Features
+            .Get<IExceptionHandlerPathFeature>()?.Error;
+
+        context.Response.ContentType = "application/json";
+
+        switch (exception)
+        {
+            case UserNotFoundException:
+                context.Response.StatusCode = 404;
+                break;
+
+            case LoginFailedException:
+            case NoIdProvidedException:
+            case UnableToCreateUserException:
+            case InvalidRefreshTokenException:
+            case EmailTakenException:
+            case BannedUserException:
+                context.Response.StatusCode = 400;
+                break;
+
+            default:
+                context.Response.StatusCode = 500;
+                break;
+        }
+
+        await context.Response.WriteAsJsonAsync(new
+        {
+            error = exception?.Message
+        });
+    });
+});
 
 app.UseHttpsRedirection();
 

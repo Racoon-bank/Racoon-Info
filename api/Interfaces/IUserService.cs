@@ -9,9 +9,11 @@ namespace api.Interfaces
 {
     public interface IUserService
     {
-        Task<ProfileDto?> GetUserProfile(string id);
-        Task<TokenResponse?> RegisterUser(RegisterUserDto registerDto);
-        Task<ProfileDto?> EditUserProfile(string userId, EditProfileDto profileDto);
-        Task<bool> IsUsernameTaken(string username);
+        Task<ProfileDto> GetUserProfile(string? id);
+        Task<ProfileDto> RegisterUser(RegisterUserDto registerDto);
+        Task<ProfileDto> RegisterEmployee(RegisterUserDto registerDto);
+        Task<ProfileDto> EditUserProfile(string? userId, EditProfileDto profileDto);
+        Task<List<ProfileDto>> GetAllUsers();
+        Task BanUser(string userId);
     }
 }

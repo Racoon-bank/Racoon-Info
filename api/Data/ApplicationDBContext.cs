@@ -9,15 +9,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace api.Data
 {
-    public class ApplicationDBContext: IdentityDbContext<User>
+    public class ApplicationDBContext : IdentityDbContext<User>
     {
         public ApplicationDBContext(DbContextOptions dbContextOptions)
         : base(dbContextOptions)
         {
-            
+
         }
 
-        public DbSet<User> Users { get; set; } 
+        public DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -26,8 +26,8 @@ namespace api.Data
             {
                 new IdentityRole
                 {
-                    Name = "Admin",
-                    NormalizedName = "ADMIN"
+                    Name = "Employee",
+                    NormalizedName = "EMPLOYEE"
                 },
                 new IdentityRole
                 {

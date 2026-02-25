@@ -13,77 +13,85 @@ using Microsoft.CodeAnalysis.Differencing;
 namespace api.Controllers
 {
     [ApiController]
-    [Route("api/user")]
+    [Route("api")]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
-        private readonly ITokenService _tokenService;
-        public UserController(IUserService userService, ITokenService tokenService)
+        public UserController(IUserService userService)
         {
             _userService = userService;
-            _tokenService = tokenService;
         }
 
-        [HttpPost("register")]
-        [AllowAnonymous]
-        public async Task<IActionResult> Register([FromBody] RegisterUserDto registerDto)
+        /// <summary>
+        /// Create an employee (for employees)
+        /// </summary>
+        [HttpPost("user")]
+        [Authorize(Roles = "Employee")]
+        public async Task<IActionResult> RegisterUser([FromBody] RegisterUserDto registerDto)
         {
-            try
-            {
-                if (!ModelState.IsValid) return BadRequest(ModelState);
-
-                if (await _userService.IsUsernameTaken(registerDto.Username))
-                {
-                    return BadRequest(new ResponseModel
-                    {
-                        Status = "Error",
-                        Message = $"Username {registerDto.Username} is already taken"
-                    });
-                }
-
-                var result = await _userService.RegisterUser(registerDto);
-                if (result != null)
-                {
-                    return Ok(result);
-                }
-                return StatusCode(500, new ResponseModel
-                {
-                    Status = "Error",
-                    Message = "Couldn't create an applicant"
-                });
-            }
-            catch (Exception e)
-            {
-                return StatusCode(500, e);
-            }
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            var result = await _userService.RegisterUser(registerDto);
+            return Ok(result);
         }
 
-        [HttpGet("profile")]
+
+        /// <summary>
+        /// Create a user (for employees)
+        /// </summary>
+        [HttpPost("employee")]
+        [Authorize(Roles = "Employee")]
+        public async Task<IActionResult> RegisterEmployee([FromBody] RegisterUserDto registerDto)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            var result = await _userService.RegisterEmployee(registerDto);
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Get profile for current user
+        /// </summary>
+        [HttpGet("user/profile")]
         [Authorize]
         public async Task<IActionResult> GetProfile()
         {
-            if (!User.IsAccessToken()) return Unauthorized();
             var profile = await _userService.GetUserProfile(User.GetId());
             return Ok(profile);
         }
 
-        [HttpPut("profile")]
+        /// <summary>
+        /// Get all users (for employees)
+        /// </summary>
+        [HttpGet("user")]
+        [Authorize(Roles = "Employee")]
+        public async Task<IActionResult> GetAllUsers()
+        {
+            var users = await _userService.GetAllUsers();
+            return Ok(users);
+        }
+
+
+        /// <summary>
+        /// Edit profile for current user
+        /// </summary>
+        [HttpPut("user/profile")]
         [Authorize]
         public async Task<IActionResult> EditProfile([FromBody] EditProfileDto profileDto)
         {
-            if (!User.IsAccessToken()) return Unauthorized();
             if (!ModelState.IsValid) return BadRequest(ModelState);
-
             var profile = await _userService.EditUserProfile(User.GetId(), profileDto);
-            if (profile == null)
-            {
-                return BadRequest(new ResponseModel
-                {
-                    Status = "Error: Bad Request",
-                    Message = $"Username {profileDto.Username} is already taken"
-                });
-            }
             return Ok(profile);
+        }
+
+
+        /// <summary>
+        /// Ban a user (for employees)
+        /// </summary>
+        [HttpPut("user/{id}/ban")]
+        [Authorize(Roles = "Employee")]
+        public async Task<IActionResult> BanUser([FromRoute] Guid id)
+        {
+            await _userService.BanUser(id.ToString());
+            return Ok();
         }
     }
 }
