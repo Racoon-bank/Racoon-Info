@@ -23,7 +23,7 @@ namespace api.Controllers
         }
 
         /// <summary>
-        /// Create an employee (for employees)
+        /// Create a user (for employees)
         /// </summary>
         [HttpPost("user")]
         [Authorize(Roles = "Employee")]
@@ -36,7 +36,7 @@ namespace api.Controllers
 
 
         /// <summary>
-        /// Create a user (for employees)
+        /// Create an emlpoyee (for employees)
         /// </summary>
         [HttpPost("employee")]
         [Authorize(Roles = "Employee")]

@@ -97,9 +97,9 @@ namespace api.Services
             }
         }
 
-        private async Task<bool> IsUsernameTaken(string username)
+        private async Task<bool> IsUsernameTaken(string email)
         {
-            return _userManager.Users.Any(u => u.UserName == username);
+            return _userManager.Users.Any(u => u.Email == email);
         }
 
         private async Task<User> FindUser(string? userId)

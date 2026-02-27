@@ -104,6 +104,12 @@ builder.Services.AddScoped<IUserService, UserService>();
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationDBContext>();
+    db.Database.Migrate();
+}
+
 app.UseExceptionHandler(errorApp =>
 {
     errorApp.Run(async context =>
