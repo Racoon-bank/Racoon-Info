@@ -27,6 +27,7 @@ namespace api.Controllers
         /// </summary>
         [HttpPost]
         [Authorize(Roles = "Employee")]
+        [ProducesResponseType(typeof(ProfileDto), StatusCodes.Status200OK)]
         public async Task<IActionResult> RegisterUser([FromBody] RegisterUserDto registerDto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -38,6 +39,7 @@ namespace api.Controllers
         /// Registration
         /// </summary>
         [HttpPost("registration")]
+        [ProducesResponseType(typeof(TokenResponse), StatusCodes.Status200OK)]
         public async Task<IActionResult> RegisterSelf([FromBody] RegisterUserDto registerDto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -51,6 +53,7 @@ namespace api.Controllers
         /// </summary>
         [HttpPost("/api/employee")]
         [Authorize(Roles = "Employee")]
+        [ProducesResponseType(typeof(ProfileDto), StatusCodes.Status200OK)]
         public async Task<IActionResult> RegisterEmployee([FromBody] RegisterUserDto registerDto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -63,6 +66,7 @@ namespace api.Controllers
         /// </summary>
         [HttpGet("profile")]
         [Authorize]
+        [ProducesResponseType(typeof(ProfileDto), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetProfile()
         {
             var profile = await _userService.GetUserProfile(User.GetId());
@@ -74,6 +78,7 @@ namespace api.Controllers
         /// </summary>
         [HttpGet]
         [Authorize(Roles = "Employee")]
+        [ProducesResponseType(typeof(List<ProfileDto>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAllUsers()
         {
             var users = await _userService.GetAllUsers();
@@ -86,6 +91,7 @@ namespace api.Controllers
         /// </summary>
         [HttpPut("profile")]
         [Authorize]
+        [ProducesResponseType(typeof(ProfileDto), StatusCodes.Status200OK)]
         public async Task<IActionResult> EditProfile([FromBody] EditProfileDto profileDto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);

@@ -26,6 +26,7 @@ namespace api.Controllers
         /// </summary>
         [HttpPost("login")]
         [AllowAnonymous]
+        [ProducesResponseType(typeof(TokenResponse), StatusCodes.Status200OK)]
         public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -38,6 +39,7 @@ namespace api.Controllers
         /// </summary>
         [HttpPost("refresh")]
         [AllowAnonymous]
+        [ProducesResponseType(typeof(TokenResponse), StatusCodes.Status200OK)]
         public async Task<IActionResult> Refresh([FromBody] RefreshDto refreshDto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
