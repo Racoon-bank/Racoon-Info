@@ -97,7 +97,7 @@
         "tags": [
           "User"
         ],
-        "summary": "Create an employee (for employees)",
+        "summary": "Create a user (for employees)",
         "requestBody": {
           "content": {
             "application/json-patch+json": {
@@ -140,12 +140,49 @@
         }
       }
     },
+    "/api/user/registration": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Registration",
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterUserDto"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterUserDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterUserDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/employee": {
       "post": {
         "tags": [
           "User"
         ],
-        "summary": "Create a user (for employees)",
+        "summary": "Create an emlpoyee (for employees)",
         "requestBody": {
           "content": {
             "application/json-patch+json": {

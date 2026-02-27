@@ -28,7 +28,7 @@ namespace api.Services
 
         public async Task<string> CreateAccessToken(string id, IList<string> roles)
         {
-            return await CreateToken(id, roles, DateTime.Now.AddMinutes(20), "AccessToken");
+            return await CreateToken(id, roles, DateTime.Now.AddMinutes(2), "AccessToken");
         }
 
         public async Task<string> CreateRefreshToken(string id, IList<string> roles)

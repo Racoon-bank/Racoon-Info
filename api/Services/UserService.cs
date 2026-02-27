@@ -68,6 +68,16 @@ namespace api.Services
             return userDto;
         }
 
+        public async Task<TokenResponse> RegisterSelf(RegisterUserDto registerDto)
+        {
+            var user = await Register(registerDto, "User");
+            return new TokenResponse
+            {
+                AccessToken = await _tokenService.CreateAccessToken(user.Id.ToString(), ["User"]),
+                RefreshToken = await _tokenService.CreateRefreshToken(user.Id.ToString(), ["User"]),
+            };
+        }
+
         public async Task<ProfileDto> RegisterEmployee(RegisterUserDto registerDto)
         {
             var userDto = await Register(registerDto, "Employee");
@@ -97,9 +107,9 @@ namespace api.Services
             }
         }
 
-        private async Task<bool> IsUsernameTaken(string username)
+        private async Task<bool> IsUsernameTaken(string email)
         {
-            return _userManager.Users.Any(u => u.UserName == username);
+            return _userManager.Users.Any(u => u.Email == email);
         }
 
         private async Task<User> FindUser(string? userId)

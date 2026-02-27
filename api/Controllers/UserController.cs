@@ -13,7 +13,7 @@ using Microsoft.CodeAnalysis.Differencing;
 namespace api.Controllers
 {
     [ApiController]
-    [Route("api")]
+    [Route("api/user")]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -23,9 +23,9 @@ namespace api.Controllers
         }
 
         /// <summary>
-        /// Create an employee (for employees)
+        /// Create a user (for employees)
         /// </summary>
-        [HttpPost("user")]
+        [HttpPost]
         [Authorize(Roles = "Employee")]
         public async Task<IActionResult> RegisterUser([FromBody] RegisterUserDto registerDto)
         {
@@ -34,11 +34,22 @@ namespace api.Controllers
             return Ok(result);
         }
 
+        /// <summary>
+        /// Registration
+        /// </summary>
+        [HttpPost("registration")]
+        public async Task<IActionResult> RegisterSelf([FromBody] RegisterUserDto registerDto)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            var result = await _userService.RegisterSelf(registerDto);
+            return Ok(result);
+        }
+
 
         /// <summary>
-        /// Create a user (for employees)
+        /// Create an emlpoyee (for employees)
         /// </summary>
-        [HttpPost("employee")]
+        [HttpPost("/api/employee")]
         [Authorize(Roles = "Employee")]
         public async Task<IActionResult> RegisterEmployee([FromBody] RegisterUserDto registerDto)
         {
@@ -50,7 +61,7 @@ namespace api.Controllers
         /// <summary>
         /// Get profile for current user
         /// </summary>
-        [HttpGet("user/profile")]
+        [HttpGet("profile")]
         [Authorize]
         public async Task<IActionResult> GetProfile()
         {
@@ -61,7 +72,7 @@ namespace api.Controllers
         /// <summary>
         /// Get all users (for employees)
         /// </summary>
-        [HttpGet("user")]
+        [HttpGet]
         [Authorize(Roles = "Employee")]
         public async Task<IActionResult> GetAllUsers()
         {
@@ -73,7 +84,7 @@ namespace api.Controllers
         /// <summary>
         /// Edit profile for current user
         /// </summary>
-        [HttpPut("user/profile")]
+        [HttpPut("profile")]
         [Authorize]
         public async Task<IActionResult> EditProfile([FromBody] EditProfileDto profileDto)
         {
@@ -86,7 +97,7 @@ namespace api.Controllers
         /// <summary>
         /// Ban a user (for employees)
         /// </summary>
-        [HttpPut("user/{id}/ban")]
+        [HttpPut("{id}/ban")]
         [Authorize(Roles = "Employee")]
         public async Task<IActionResult> BanUser([FromRoute] Guid id)
         {
