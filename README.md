@@ -8,19 +8,14 @@ If you want to connect to db - create a SQLServer db and adjust following creden
 
 ```
 "ConnectionStrings": {
-    "SonyaConnection": "Data Source={Server};Initial Catalog={database name};Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False"
+    "DefaultConnection": "Data Source={Server};Initial Catalog={database name};Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False"
   },
 ```
 Server name can be found be expecting **Properties** of your database.
-Then ran migrations
+
+To run:
 ```
 cd api
-dotnet ef migrations add Init
-dotnet ef database update
-```
-
-To run (in api folder):
-```
 dotnet watch run
 ```
 
