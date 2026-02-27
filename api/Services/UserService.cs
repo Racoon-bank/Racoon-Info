@@ -68,6 +68,16 @@ namespace api.Services
             return userDto;
         }
 
+        public async Task<TokenResponse> RegisterSelf(RegisterUserDto registerDto)
+        {
+            var user = await Register(registerDto, "User");
+            return new TokenResponse
+            {
+                AccessToken = await _tokenService.CreateAccessToken(user.Id.ToString(), ["User"]),
+                RefreshToken = await _tokenService.CreateRefreshToken(user.Id.ToString(), ["User"]),
+            };
+        }
+
         public async Task<ProfileDto> RegisterEmployee(RegisterUserDto registerDto)
         {
             var userDto = await Register(registerDto, "Employee");
