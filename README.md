@@ -1,6 +1,25 @@
 # Racoon-Info
 Here lies the user logic of the Racoon Bank
 
+## New Things
+Now there's a seeding service that creates two users, so you don't have to so it manually.
+
+**1. Employee**
+```   
+{
+  "email": "manager@example.com",
+  "password": "string1"
+}
+```
+
+**2. User**
+```   
+{
+  "email": "user@example.com",
+  "password": "string1"
+}
+```
+
 
 ## How to run
 
