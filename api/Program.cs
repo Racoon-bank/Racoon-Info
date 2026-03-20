@@ -106,8 +106,11 @@ var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {
-    var db = scope.ServiceProvider.GetRequiredService<ApplicationDBContext>();
+    var services = scope.ServiceProvider;
+    var db = services.GetRequiredService<ApplicationDBContext>();
     db.Database.Migrate();
+    await SeedingService.SeedEmployee(services);
+    await SeedingService.SeedUser(services);
 }
 
 app.UseExceptionHandler(errorApp =>

@@ -84,6 +84,15 @@ namespace api.Services
             return userDto;
         }
 
+        public async Task<ProfileDto> SwitchTheme(string? id)
+        {
+            var user = await FindUser(id);
+            var newTheme = user.Theme == Theme.Light ? Theme.Dark : Theme.Light;
+            user.Theme = newTheme;
+            await _userManager.UpdateAsync(user);
+            return user.ToProfileDto();
+        }
+
         private async Task<ProfileDto> Register(RegisterUserDto registerDto, string Role)
         {
             if (await IsUsernameTaken(registerDto.Username))

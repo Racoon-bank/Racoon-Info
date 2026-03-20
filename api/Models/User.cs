@@ -11,5 +11,6 @@ namespace api.Models
         public string Name { get; set; } = string.Empty;
         public string? RefreshToken { get; set; }
         public bool IsBanned { get; set; } = false;
+        public Theme Theme { get; set; } = Theme.Light;
     }
 }

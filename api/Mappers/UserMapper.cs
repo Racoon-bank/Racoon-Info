@@ -16,6 +16,7 @@ namespace api.Mappers
                 Id = new Guid(user.Id),
                 Email = user.Email,
                 Username = user.Name,
+                Theme = user.Theme,
             };
         }
 
@@ -25,7 +26,8 @@ namespace api.Mappers
             {
                 Email = dto.Email,
                 UserName = dto.Email,
-                Name = dto.Username
+                Name = dto.Username,
+                Theme = Theme.Light,
             };
         }
     }

@@ -74,6 +74,17 @@ namespace api.Controllers
         }
 
         /// <summary>
+        /// Switch theme
+        /// </summary>
+        [HttpPut("theme")]
+        [Authorize]
+        public async Task<IActionResult> SwitchTheme()
+        {
+            var profile = await _userService.SwitchTheme(User.GetId());
+            return Ok(profile);
+        }
+
+        /// <summary>
         /// Get all users (for employees)
         /// </summary>
         [HttpGet]

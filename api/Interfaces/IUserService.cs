@@ -16,5 +16,6 @@ namespace api.Interfaces
         Task<ProfileDto> EditUserProfile(string? userId, EditProfileDto profileDto);
         Task<List<ProfileDto>> GetAllUsers();
         Task BanUser(string userId);
+        Task<ProfileDto> SwitchTheme(string? id);
     }
 }
