@@ -10,7 +10,7 @@
         "tags": [
           "Auth"
         ],
-        "summary": "Login",
+        "summary": "Login endpoint just in case (don't touch)",
         "requestBody": {
           "content": {
             "application/json-patch+json": {
@@ -55,6 +55,70 @@
                 }
               }
             }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Returns login page",
+        "parameters": [
+          {
+            "name": "redirectUrl",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/auth/login-form": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Login endpoint for sso form (don't touch)",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  },
+                  "redirectUrl": {
+                    "type": "string"
+                  }
+                }
+              },
+              "encoding": {
+                "email": {
+                  "style": "form"
+                },
+                "password": {
+                  "style": "form"
+                },
+                "redirectUrl": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }
@@ -407,6 +471,19 @@
         }
       }
     },
+    "/api/user/theme": {
+      "put": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Switch theme",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/user/{id}/ban": {
       "put": {
         "tags": [
@@ -487,6 +564,9 @@
           "email": {
             "type": "string",
             "nullable": true
+          },
+          "theme": {
+            "$ref": "#/components/schemas/Theme"
           }
         },
         "additionalProperties": false
@@ -526,6 +606,13 @@
           }
         },
         "additionalProperties": false
+      },
+      "Theme": {
+        "enum": [
+          "Light",
+          "Dark"
+        ],
+        "type": "string"
       },
       "TokenResponse": {
         "type": "object",
