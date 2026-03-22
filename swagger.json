@@ -407,6 +407,19 @@
         }
       }
     },
+    "/api/user/theme": {
+      "put": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Switch theme",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/user/{id}/ban": {
       "put": {
         "tags": [
@@ -487,6 +500,9 @@
           "email": {
             "type": "string",
             "nullable": true
+          },
+          "theme": {
+            "$ref": "#/components/schemas/Theme"
           }
         },
         "additionalProperties": false
@@ -526,6 +542,13 @@
           }
         },
         "additionalProperties": false
+      },
+      "Theme": {
+        "enum": [
+          "Light",
+          "Dark"
+        ],
+        "type": "string"
       },
       "TokenResponse": {
         "type": "object",
