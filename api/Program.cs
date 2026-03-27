@@ -101,6 +101,7 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IAppService, AppService>();
 
 var app = builder.Build();
 
@@ -125,7 +126,12 @@ app.UseExceptionHandler(errorApp =>
         switch (exception)
         {
             case UserNotFoundException:
+            case BankAccountNotFoundException:
                 context.Response.StatusCode = 404;
+                break;
+
+            case AccessDeniedException:
+                context.Response.StatusCode = 403;
                 break;
 
             case LoginFailedException:

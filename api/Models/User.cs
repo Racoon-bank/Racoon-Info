@@ -12,5 +12,6 @@ namespace api.Models
         public string? RefreshToken { get; set; }
         public bool IsBanned { get; set; } = false;
         public Theme Theme { get; set; } = Theme.Light;
+        public List<HiddenBankAccount> HiddenBankAccounts { get; set; } = new List<HiddenBankAccount>();
     }
 }

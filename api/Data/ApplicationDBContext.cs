@@ -18,6 +18,7 @@ namespace api.Data
         }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<HiddenBankAccount> HiddenBankAccounts { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -36,6 +37,12 @@ namespace api.Data
                 }
             };
             builder.Entity<IdentityRole>().HasData(roles);
+
+            builder.Entity<User>().HasMany(u => u.HiddenBankAccounts);
+
+            builder.Entity<HiddenBankAccount>().HasOne(h => h.User);
+            builder.Entity<HiddenBankAccount>().HasKey(h => h.BankAccountId);
+
         }
 
     }
