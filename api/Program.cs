@@ -114,6 +114,8 @@ using (var scope = app.Services.CreateScope())
     await SeedingService.SeedUser(services);
 }
 
+app.UseMiddleware<RandomFailureMiddleware>();
+
 app.UseExceptionHandler(errorApp =>
 {
     errorApp.Run(async context =>
