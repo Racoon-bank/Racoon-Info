@@ -114,7 +114,7 @@ builder.Services.AddHttpClient("monitoring", client =>
 {
     client.BaseAddress = new Uri(builder.Configuration["MetricsService:HostName"]);
 }).AddPolicyHandler(HttpPolicies.GetRetryPolicy())
-.AddPolicyHandler(HttpPolicies.GetCircuitBreakerPolicy()); ;
+.AddPolicyHandler(HttpPolicies.GetCircuitBreakerPolicy());
 
 var app = builder.Build();
 
