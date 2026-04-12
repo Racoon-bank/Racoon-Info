@@ -6,6 +6,7 @@ using api.Features.Idempotency;
 using api.Features.Metrics;
 using api.Interfaces;
 using api.Models;
+using api.Retries;
 using api.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics;
@@ -112,7 +113,8 @@ builder.Services.AddHostedService<LogSenderService>();
 builder.Services.AddHttpClient("monitoring", client =>
 {
     client.BaseAddress = new Uri(builder.Configuration["MetricsService:HostName"]);
-});
+}).AddPolicyHandler(HttpPolicies.GetRetryPolicy())
+.AddPolicyHandler(HttpPolicies.GetCircuitBreakerPolicy()); ;
 
 var app = builder.Build();
 
