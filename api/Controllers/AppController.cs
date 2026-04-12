@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using api.Extensions;
+using api.Features.Idempotency;
 using api.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -36,6 +37,7 @@ namespace api.Controllers
         /// </summary>
         [HttpPut("theme")]
         [Authorize]
+        [Idempotent]
         public async Task<IActionResult> SwitchTheme()
         {
             var profile = await _appService.SwitchTheme(User.GetId());
@@ -47,6 +49,7 @@ namespace api.Controllers
         /// </summary>
         [HttpPost("bankAccount/{id}")]
         [Authorize]
+        [Idempotent]
         public async Task<IActionResult> HideBankAccount([FromRoute] Guid id)
         {
             var bankAccount = await _appService.HideBankAccount(id, User.GetId());
@@ -58,6 +61,7 @@ namespace api.Controllers
         /// </summary>
         [HttpDelete("bankAccount/{id}")]
         [Authorize]
+        [Idempotent]
         public async Task<IActionResult> RevealBankAccount([FromRoute] Guid id)
         {
             var bankAccount = await _appService.RevealBankAccount(id, User.GetId());

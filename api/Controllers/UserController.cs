@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using api.Dtos;
 using api.Extensions;
+using api.Features.Idempotency;
 using api.Interfaces;
 using api.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -28,6 +29,7 @@ namespace api.Controllers
         [HttpPost]
         [Authorize(Roles = "Employee")]
         [ProducesResponseType(typeof(ProfileDto), StatusCodes.Status200OK)]
+        [Idempotent]
         public async Task<IActionResult> RegisterUser([FromBody] RegisterUserDto registerDto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -40,6 +42,7 @@ namespace api.Controllers
         /// </summary>
         [HttpPost("registration")]
         [ProducesResponseType(typeof(TokenResponse), StatusCodes.Status200OK)]
+        [Idempotent]
         public async Task<IActionResult> RegisterSelf([FromBody] RegisterUserDto registerDto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -54,6 +57,7 @@ namespace api.Controllers
         [HttpPost("/api/employee")]
         [Authorize(Roles = "Employee")]
         [ProducesResponseType(typeof(ProfileDto), StatusCodes.Status200OK)]
+        [Idempotent]
         public async Task<IActionResult> RegisterEmployee([FromBody] RegisterUserDto registerDto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -92,6 +96,7 @@ namespace api.Controllers
         [HttpPut("profile")]
         [Authorize]
         [ProducesResponseType(typeof(ProfileDto), StatusCodes.Status200OK)]
+        [Idempotent]
         public async Task<IActionResult> EditProfile([FromBody] EditProfileDto profileDto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -105,6 +110,7 @@ namespace api.Controllers
         /// </summary>
         [HttpPut("{id}/ban")]
         [Authorize(Roles = "Employee")]
+        [Idempotent]
         public async Task<IActionResult> BanUser([FromRoute] Guid id)
         {
             await _userService.BanUser(id.ToString());

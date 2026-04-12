@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using api.Dtos;
 using api.Extensions;
+using api.Features.Idempotency;
 using api.Interfaces;
 using api.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -96,6 +97,7 @@ namespace api.Controllers
         [HttpPost("refresh")]
         [AllowAnonymous]
         [ProducesResponseType(typeof(TokenResponse), StatusCodes.Status200OK)]
+        [Idempotent]
         public async Task<IActionResult> Refresh([FromBody] RefreshDto refreshDto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);

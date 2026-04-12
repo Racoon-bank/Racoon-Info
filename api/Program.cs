@@ -2,6 +2,8 @@ using System.Reflection;
 using System.Text.Json.Serialization;
 using api.Data;
 using api.Exceptions;
+using api.Features.Idempotency;
+using api.Features.Metrics;
 using api.Interfaces;
 using api.Models;
 using api.Services;
@@ -59,6 +61,7 @@ builder.Services.AddSwaggerGen(option =>
     });
     var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     option.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+    option.OperationFilter<IdempotencyFilter>();
 });
 
 builder.Services.AddDbContext<ApplicationDBContext>(options =>
@@ -102,6 +105,14 @@ builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAppService, AppService>();
+builder.Services.AddScoped<IIdempotencyService, IdempotencyService>();
+builder.Services.AddSingleton<LogBuffer>();
+builder.Services.AddHostedService<LogSenderService>();
+
+builder.Services.AddHttpClient("monitoring", client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration["MetricsService:HostName"]);
+});
 
 var app = builder.Build();
 
@@ -113,8 +124,6 @@ using (var scope = app.Services.CreateScope())
     await SeedingService.SeedEmployee(services);
     await SeedingService.SeedUser(services);
 }
-
-app.UseMiddleware<RandomFailureMiddleware>();
 
 app.UseExceptionHandler(errorApp =>
 {
@@ -159,6 +168,8 @@ app.UseExceptionHandler(errorApp =>
 
 app.UseHttpsRedirection();
 
+app.UseRouting();
+
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
@@ -167,6 +178,10 @@ app.UseSwaggerUI(c =>
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseMiddleware<IdempotencyMiddleware>();
+app.UseMiddleware<RandomFailureMiddleware>();
+app.UseMiddleware<MetricsMiddleware>();
 
 app.MapControllers();
 

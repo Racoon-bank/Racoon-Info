@@ -19,6 +19,7 @@ namespace api.Data
 
         public DbSet<User> Users { get; set; }
         public DbSet<HiddenBankAccount> HiddenBankAccounts { get; set; }
+        public DbSet<IdempotencyRecord> IdempotencyRecords { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
